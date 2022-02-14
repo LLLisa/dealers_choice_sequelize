@@ -20,8 +20,8 @@ const syncAndSeed = async () => {
     const lisa = await Owner.create({ name: 'Lisa' });
     const vj = await Owner.create({ name: 'VJ' });
     const sarah = await Owner.create({ name: 'Sarah' });
-    const emily = await Owner.create({ name: 'Emily' });
-    const jeanMichel = await Pet.create({
+    // const emily = await Owner.create({ name: 'Emily' });
+    await Pet.create({
       name: 'Jean-Michel',
       species: 'cat',
       ownerId: lisa.id,
@@ -34,9 +34,8 @@ const syncAndSeed = async () => {
   }
 };
 
-//Router setup ------------------------------
+//server setup ------------------------------
 const express = require('express');
-const { type } = require('express/lib/response');
 const app = express();
 
 const init = async () => {
@@ -69,7 +68,57 @@ app.get('/pets', async (req, res, next) => {
       <ul>
         ${pets
           .map((x) => {
-            return `<li>${x.name}, ${x.species}</li>`;
+            return `<li>${x.name}, <a href="/pets/species/${x.species}">${x.species}</a></li>`;
+          })
+          .join('')}
+      </ul>
+    </html>
+    `;
+    res.send(html);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/pets/species/:species', async (req, res, next) => {
+  try {
+    const _species = await Pet.findAll({
+      where: { species: req.params.species },
+      include: [Owner],
+    });
+    const html = `
+    <html>
+    <h1>${req.params.species}s</h1>
+    <a href="/">back</a>
+      <ul>
+        ${_species
+          .map((x) => {
+            return `<li>${x.name}, familiar of <a href="/pets/owners/${x.ownerId}">${x.owner.name}</a></li>`;
+          })
+          .join('')}
+      </ul>
+    </html>
+    `;
+    res.send(html);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/pets/owners/:id', async (req, res, next) => {
+  try {
+    const owner = await Owner.findByPk(req.params.id);
+    const petListByOwner = await Pet.findAll({
+      where: { ownerId: req.params.id },
+    });
+    const html = `
+    <html>
+      <h1>${owner.name}</h1>
+      <a href="/">home</a>
+      <ul>
+        ${petListByOwner
+          .map((x) => {
+            return `<li>${x.name}</li>`;
           })
           .join('')}
       </ul>
