@@ -1,0 +1,29 @@
+{
+  "name": "dealers_choice_sequelize",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    ,"start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LLLisa/dealers_choice_sequelize.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LLLisa/dealers_choice_sequelize/issues"
+  },
+  "homepage": "https://github.com/LLLisa/dealers_choice_sequelize#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "pg": "^8.7.3",
+    "sequelize": "^6.16.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
